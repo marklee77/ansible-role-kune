@@ -1,7 +1,7 @@
 ---
-- name: restart gitlab
+- name: restart kune
   service:
-    name: gitlab
+    name: kune
     state: restarted
  
 - name: restart nginx

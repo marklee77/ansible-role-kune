@@ -1,5 +1,5 @@
 ---
-gitlab_root_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/root-mysql-password') }}"
-gitlab_git_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/git-mysql-password') }}"
-gitlab_hostname: gitlab
-gitlab_port: 8888
+kune_root_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/root-mysql-password') }}"
+kune_kune_mysql_password: "{{ lookup('password', inventory_dir + '/credentials/kune-mysql-password') }}"
+kune_hostname: kune
+kune_port: 8888

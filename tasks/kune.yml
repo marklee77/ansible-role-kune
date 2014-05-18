@@ -1,0 +1,105 @@
+---
+- name: ensure dependencies available through apt are installed
+  apt: 
+    pkg: "{{ item }}" 
+    state: latest 
+    update_cache: yes 
+    cache_valid_time: 600
+  with_items:
+    - adduser 
+    - dbconfig-common
+    - libmagick6-jni
+    - openjdk-6-jdk
+    - python-software-properties
+
+- name: ensure kune repository key is present
+  apt_key:
+    id: 9E358A05
+    keyserver: pgp.mit.edu
+    state: present
+
+- name: ensure kune repository is present
+  apt_repository:
+    repo: deb http://kune.ourproject.org/pub/kune/debian/ stable
+    update_cache: yes
+    state: present
+
+- name: ensure kune packages are installed
+  apt: 
+    pkg: "{{ item }}" 
+    state: latest 
+    update_cache: yes 
+    cache_valid_time: 600
+  with_items:
+    - kune
+
+#- name: ensure link to /srv/git exists
+#  file:
+#    src: /home/git
+#    path: /srv/git
+#    state: link
+
+- name: ensure kune database is present
+  mysql_db: 
+    name: kune
+
+- name: ensure kune database user is present
+  mysql_user: 
+    name: kune
+    host: "{{ item }}" 
+    password: "{{ kune_kune_mysql_password }}" 
+    priv: kune.*:ALL
+  with_items:
+    - "%"
+    - localhost
+
+#- name: copy .my.cnf file with git password credentials
+#  template:
+#    src: home/git/.my.cnf
+#    dest: /home/git/.my.cnf
+#    owner: git
+#    group: git
+#    mode: 0600
+
+#- name: update gitlab.yml from template
+#  template:
+#    src: home/git/gitlab/config/gitlab.yml
+#    dest: /home/git/gitlab/config/gitlab.yml
+#    owner: git
+#    group: git
+#    mode: 0600
+#  notify:
+#    - restart gitlab
+
+#- name: set up database if necessary 
+#  sudo_user: git
+#  shell: bundle exec rake gitlab:setup RAILS_ENV=production <<< "yes" && touch .setup
+#         executable=/bin/bash
+#         chdir=/home/git/gitlab
+#         creates=/home/git/gitlab/.setup
+#  notify:
+#    - restart gitlab
+
+- name: ensure kune is started and enabled
+  service:
+    name: kune
+    state: started
+    enabled: yes
+
+- name: update kune nginx configuration from template
+  template:
+    src: etc/nginx/sites-available/kune
+    dest: /etc/nginx/sites-available/kune
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+
+- name: enable kune nginx configuration
+  file:
+    src: ../sites-available/kune
+    path: /etc/nginx/sites-enabled/kune
+    state: link
+  notify:
+    - restart nginx
