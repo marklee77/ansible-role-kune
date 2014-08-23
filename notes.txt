@@ -1,0 +1,14 @@
+activate in /etc/default/kune
+
+link /srv/kune to /var/lib/kune
+
+set up databases:
+    - kune_dev
+    - kune_test
+    - kune_prod
+    - kune_openfire
+
+set up openfire xmpp?
+
+mysql: /usr/share/dbconfig-common/data/kune/install/mysql 
+
