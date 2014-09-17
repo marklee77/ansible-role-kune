@@ -1,5 +1,5 @@
-Role Name
-========
+marklee77.kune
+==============
 
 The purpose of this role is to install kune to a web server and enable access
 with nginx. The kune server name can be specified by changing the kune_hostname
@@ -36,10 +36,10 @@ your web browser.
 License
 -------
 
-Affero GPL
+GPLv2
 
 Author Information
 ------------------
 
-http://marklee77.github.io
+http://stillwell.me
 
